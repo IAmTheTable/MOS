@@ -9,7 +9,15 @@
 #error "This needs to be compiled with a ix86-elf compiler"
 #endif
  
-
+extern "C" void t_w(int scan_code, int charac)
+{
+	terminal_writestring("Scan code: ");
+	terminal_writestring(reinterpret_cast<const char*>(scan_code));
+	terminal_writestring("\n");
+	terminal_writestring("Char code: ");
+	terminal_writestring(reinterpret_cast<const char*>(charac));
+	terminal_writestring("\n");
+}
  
 extern "C" void kernel_main(void) 
 {
@@ -22,4 +30,6 @@ extern "C" void kernel_main(void)
 	terminal_writestring_c("This text is cyan!\n", vga_color::VGA_COLOR_CYAN);
 	terminal_writestring("This is very ");
 	terminal_writestring_c("bad", vga_color::VGA_COLOR_RED);
+
 }   
+

@@ -1,10 +1,10 @@
 export desktop="/mnt/c/Users/Administrator/Desktop"
 export gcc="$desktop/opt/gcc/bin"
-$gcc/i686-elf-as boot.s -o boot.o
+nasm -f elf boot.s -o boot.o
 echo "assembled the multi boot header"
-$gcc/i686-elf-g++ -c kernel.cpp -o kernel.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+$gcc/i686-elf-g++ -masm=intel -c kernel.cpp -o kernel.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 echo "Compiling kernel"
-$gcc/i686-elf-g++ -T linker.ld -o MOS.bin -ffreestanding -O2 -nostdlib boot.o kernel.o -lgcc
+$gcc/i686-elf-g++ -masm=intel -T linker.ld -o MOS.bin -ffreestanding -O2 -nostdlib boot.o kernel.o -lgcc
 echo "Linking kernel"
 if grub-file --is-x86-multiboot MOS.bin; then
   echo multiboot confirmed
