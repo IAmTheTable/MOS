@@ -1,6 +1,6 @@
 export desktop="/mnt/c/Users/Administrator/Desktop"
 export gcc="$desktop/opt/gcc/bin"
-nasm -f elf boot.s -o boot.o
+$gcc/i686-elf-as boot.s -o boot.o
 echo "assembled the multi boot header"
 $gcc/i686-elf-g++ -masm=intel -c kernel.cpp -o kernel.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 echo "Compiling kernel"
