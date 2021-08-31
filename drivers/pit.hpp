@@ -1,4 +1,6 @@
 // constants
+#pragma once
+
 #define COUNTER_0 				0x40
 #define CTRL_WORD				0x43
 #define SQR_WAVE_BIN_COUNTER	0x36

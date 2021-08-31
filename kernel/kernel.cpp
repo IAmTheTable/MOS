@@ -1,4 +1,10 @@
 #include "kernel.hpp"
+#include "../drivers/terminal.hpp"
+#include "../drivers/kbd.hpp"
+#include "../drivers/pic.hpp"
+#include "../drivers/pit.hpp"
+#include "../drivers/utils.hpp"
+#include "../drivers/interrupts.hpp"
 
 static INPUT_HNDLR input_f = default_input;
 
@@ -19,6 +25,11 @@ extern "C" void kernel_main(void)
 	pit_initialize(1000);		// start timer ticking every ms
 	kbd_initialize();			// enable keyboard
 	__asm__("sti"); 			// enable interrupts
+	terminal_writestring("INTERRUPTS ENABLED");
+	while(true)
+	{
+		halt();
+	}
 }   
 
 void kbd_dispatch(int kbd_scan_code)

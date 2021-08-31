@@ -84,11 +84,10 @@ _start:
 	stack since (pushed 0 bytes so far), so the alignment has thus been
 	preserved and the call is well defined.
 	*/
-	sti
 	call kernel_main
-	hlt
-	call t_w
-
+	cli
+1:  hlt
+	jmp 1b
 /*
 Set the size of the _start symbol to the current location '.' minus its start.
 This is useful when debugging or when you implement call tracing.

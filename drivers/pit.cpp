@@ -1,11 +1,10 @@
 /* the programmable interval timer driver */
 
 // includes
-#include "pit.h"
-#include "interrupts.h"
-#include "monitor_mode_txt.h"
-#include "../kernel/util.h"
-#include "../kernel/low_level_io.h"
+#include "pit.hpp"
+#include "interrupts.hpp"
+#include "utils.hpp"
+#include "../kernel/low_level_io.hpp"
 
 // globals
 TI irq_f;				// pointer to the timer interrupt handler

@@ -1,4 +1,7 @@
 // constants
+#pragma once
+#include <stdint.h>
+
 #define MASTER_PIC_CMD_PORT		0x20
 #define MASTER_PIC_DATA_PORT	0x21
 #define SLAVE_PIC_CMD_PORT		0xA0

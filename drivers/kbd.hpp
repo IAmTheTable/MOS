@@ -1,5 +1,6 @@
-#define KBD_IRQ			0x21 // kbr irq address in IDT (33 dec)
+#pragma once
 
+#define KBD_IRQ			0x21 // kbr irq address in IDT (33 dec)
 // ports and codes
 #define KBD_ENC_INPUT	0x60
 #define KBD_ENC_CMD		0x60

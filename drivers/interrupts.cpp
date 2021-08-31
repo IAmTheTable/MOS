@@ -1,12 +1,12 @@
 /* installs idt and deals with interrupts */
 
 // includes
-#include "interrupts.h"
-#include "pic.h"
-#include "pit.h"
+#include "interrupts.hpp"
+#include "pic.hpp"
+#include "pit.hpp"
 #include "utils.hpp"
+#include "../kernel/low_level_io.hpp"
 #include "terminal.hpp"
-#include "../kernel/low_level_io.h"
 
 // globals
 static idt_desc _idt[MAX_INTERRUPTS];
@@ -65,12 +65,16 @@ int idt_init(uint16_t code_selector)
 
 void default_handler(void)
 {
+	terminal_writestring("INTERRUPT");
+	while(true)
+	{
+		halt();
+	}
 	/* the default handler */
 	
 	// save registers
 	__asm__("pusha");
 	
-	print("An exception has occured.\n");
 	halt();
 	end_of_interrupt();
 

@@ -1,5 +1,5 @@
 /* Credit again to vladCC and his tetrisOS code */
-
+#pragma once
 // includes
 #include <stdint.h>
 #include <stddef.h>
