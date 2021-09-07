@@ -20,5 +20,5 @@ OBJ = ${C_SOURCES:.cpp=.o}
 	/mnt/c/Users/Administrator/Desktop/opt/gcc/bin/i686-elf-g++ -c $< -o $@ -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 
 build/MOS.bin: ${OBJ}
-	/mnt/c/Users/Administrator/Desktop/opt/gcc/bin/i686-elf-as boot.s -o boot.o
+	nasm -f coff boot/boot.s -o boot.o
 	/mnt/c/Users/Administrator/Desktop/opt/gcc/bin/i686-elf-g++ -T linker.ld -o $@ -ffreestanding -O2 -nostdlib boot.o $^ -lgcc

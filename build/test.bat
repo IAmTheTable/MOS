@@ -1,2 +1,2 @@
-"C:\Program Files\qemu\qemu-system-i386.exe" -kernel MOS.bin
+"C:\Program Files\qemu\qemu-system-i386.exe" boot.bin
 pause
