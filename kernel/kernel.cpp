@@ -6,6 +6,8 @@
 #include "../drivers/utils.hpp"
 #include "../drivers/interrupts.hpp"
 
+#include "os_main.hpp"
+
 static INPUT_HNDLR input_f = default_input;
 
 extern "C" void kernel_main(void) 
@@ -19,6 +21,7 @@ extern "C" void kernel_main(void)
 	terminal_writestring_c("This text is cyan!\n", vga_color::VGA_COLOR_CYAN);
 	terminal_writestring("This is very ");
 	terminal_writestring_c("bad", vga_color::VGA_COLOR_RED);
+	
 	idt_init(IDT);				// set id table
 	pic_initialize();			// intialize the pic
 	set_interval_size(1000);	// count every 1000 ticks
@@ -26,6 +29,7 @@ extern "C" void kernel_main(void)
 	kbd_initialize();			// enable keyboard
 	__asm__("sti"); 			// enable interrupts
 	terminal_writestring("INTERRUPTS ENABLED");
+	os_main_entry();
 	while(true)
 	{
 		halt();
