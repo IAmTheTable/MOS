@@ -27,7 +27,9 @@ extern "C" void kernel_main(void)
 	set_interval_size(1000);	// count every 1000 ticks
 	pit_initialize(1000);		// start timer ticking every ms
 	kbd_initialize();			// enable keyboard
+
 	__asm__("sti"); 			// enable interrupts
+	
 	terminal_writestring("INTERRUPTS ENABLED");
 	os_main_entry();
 	while(true)

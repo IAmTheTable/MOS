@@ -26,6 +26,14 @@ load_sectors:
 	mov ah, 0x02	; BIOS read
 	int 0x13
 
+	add ah, 48
+	shl ax, 8
+	push ax
+	push 0; null term
+	mov ax, sp
+
+	call print_cstring
+
 	jc read_error	; carry flag is set on error
 
 	pop cx		; pop requested number of sectors
@@ -47,4 +55,4 @@ read_error:
 	hlt
 
 ; string message
-DISK_ERROR: db "Disk read error!", 0
+DISK_ERROR: db "load sector: Disk read error!", 0

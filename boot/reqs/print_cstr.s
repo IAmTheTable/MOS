@@ -17,6 +17,16 @@ print_cstring:
 	cmp al, 0	; print again if it's not null
 	jne .loop
 
+	mov ah, 0x03 ; cursor
+	mov bh, 0
+	int 0x10
+
+	inc dh
+
+	mov ah, 2
+	mov dl, 0
+	int 0x10
+
 	; restore and return
 	pop bx
 	pop ax

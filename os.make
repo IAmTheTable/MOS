@@ -15,18 +15,19 @@ OBJ = ${C_SOURCES:.cpp=.o}
 
 
 build/MOS.img: boot/boot.bin build/MOS.bin
-	cat $^ > boot/MOS.img
+	cat $^ > build/MOS.img
 	dd if=build/MOS.img of=TableOS.img bs=512 count=2880
 
 %.o : %.cpp ${HEADERS}
 	echo $<
-	/mnt/c/Users/Administrator/Desktop/opt/gcc/bin/i686-elf-g++ -c $< -o $@ -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+	/opt/cross/bin/i686-elf-cpp $< -o $@ -ffreestanding
 
-build/MOS.bin: boot/k_entry.o ${OBJ}
-	/mnt/c/Users/Administrator/Desktop/opt/gcc/bin/i686-elf-g++ -ffreestanding $< -o $@ -lgcc
+build/MOS.bin: boot/k_main.o ${OBJ}
+	/opt/cross/bin/i686-elf-cpp -ffreestanding $< -o $@ -lgcc
 
 boot/k_main.o: boot/k_main.s
 	nasm $< -f elf -o $@
 
 boot/boot.bin: boot/boot.s $(ASM)
+	echo $<
 	nasm $< -f bin -I 'boot/' -o $@

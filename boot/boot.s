@@ -1,5 +1,4 @@
 ; global bios offset
-
 [bits 16]
 [org 0x7c00]
 
@@ -35,14 +34,14 @@ STACK equ 0x9000
 ; variables
 BOOT_DRV db 0
 
-%include "reqs/boot_print.s"
 %include "reqs/32b_gdt.s"
 %include "reqs/32b_print.s"
-%include "reqs/32b_switch.s"
 %include "reqs/clear_scr.s"
 %include "reqs/print_cstr.s"
 %include "reqs/load_kernel.s"
 %include "reqs/load_sectors.s"
+%include "reqs/print_char.s"
+%include "reqs/pm_load.s"
 
 [bits 32]
 BEGIN_PM:

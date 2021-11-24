@@ -1,0 +1,261 @@
+# 0 "drivers/terminal.cpp"
+# 0 "<built-in>"
+# 0 "<command-line>"
+# 1 "drivers/terminal.cpp"
+# 1 "drivers/terminal.hpp" 1
+       
+
+# 1 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stdint.h" 1 3 4
+# 11 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stdint.h" 3 4
+# 1 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stdint-gcc.h" 1 3 4
+# 34 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stdint-gcc.h" 3 4
+
+# 34 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stdint-gcc.h" 3 4
+typedef signed char int8_t;
+
+
+typedef short int int16_t;
+
+
+typedef long int int32_t;
+
+
+typedef long long int int64_t;
+
+
+typedef unsigned char uint8_t;
+
+
+typedef short unsigned int uint16_t;
+
+
+typedef long unsigned int uint32_t;
+
+
+typedef long long unsigned int uint64_t;
+
+
+
+
+typedef signed char int_least8_t;
+typedef short int int_least16_t;
+typedef long int int_least32_t;
+typedef long long int int_least64_t;
+typedef unsigned char uint_least8_t;
+typedef short unsigned int uint_least16_t;
+typedef long unsigned int uint_least32_t;
+typedef long long unsigned int uint_least64_t;
+
+
+
+typedef int int_fast8_t;
+typedef int int_fast16_t;
+typedef int int_fast32_t;
+typedef long long int int_fast64_t;
+typedef unsigned int uint_fast8_t;
+typedef unsigned int uint_fast16_t;
+typedef unsigned int uint_fast32_t;
+typedef long long unsigned int uint_fast64_t;
+
+
+
+
+typedef long int intptr_t;
+
+
+typedef long unsigned int uintptr_t;
+
+
+
+
+typedef long long int intmax_t;
+typedef long long unsigned int uintmax_t;
+# 12 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stdint.h" 2 3 4
+# 4 "drivers/terminal.hpp" 2
+# 1 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stdbool.h" 1 3 4
+# 5 "drivers/terminal.hpp" 2
+# 1 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stddef.h" 1 3 4
+# 143 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stddef.h" 3 4
+typedef long int ptrdiff_t;
+# 209 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stddef.h" 3 4
+typedef long unsigned int size_t;
+# 415 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stddef.h" 3 4
+typedef struct {
+  long long __max_align_ll __attribute__((__aligned__(__alignof__(long long))));
+  long double __max_align_ld __attribute__((__aligned__(__alignof__(long double))));
+
+
+
+
+
+
+  __float128 __max_align_f128 __attribute__((__aligned__(__alignof(__float128))));
+
+} max_align_t;
+
+
+
+
+
+
+  typedef decltype(nullptr) nullptr_t;
+# 6 "drivers/terminal.hpp" 2
+
+
+# 7 "drivers/terminal.hpp"
+enum vga_color {
+ VGA_COLOR_BLACK = 0,
+ VGA_COLOR_BLUE = 1,
+ VGA_COLOR_GREEN = 2,
+ VGA_COLOR_CYAN = 3,
+ VGA_COLOR_RED = 4,
+ VGA_COLOR_MAGENTA = 5,
+ VGA_COLOR_BROWN = 6,
+ VGA_COLOR_LIGHT_GREY = 7,
+ VGA_COLOR_DARK_GREY = 8,
+ VGA_COLOR_LIGHT_BLUE = 9,
+ VGA_COLOR_LIGHT_GREEN = 10,
+ VGA_COLOR_LIGHT_CYAN = 11,
+ VGA_COLOR_LIGHT_RED = 12,
+ VGA_COLOR_LIGHT_MAGENTA = 13,
+ VGA_COLOR_LIGHT_BROWN = 14,
+ VGA_COLOR_WHITE = 15,
+};
+
+static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg);
+static inline uint16_t vga_entry(unsigned char uc, uint8_t color);
+void terminal_initialize(void);
+void terminal_setcolor(uint8_t color);
+void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
+void terminal_putchar(char c);
+void terminal_putchar_c(char c, vga_color color);
+void terminal_write(const char* data, size_t size);
+void terminal_writestring(const char* data);
+void terminal_writestring_c(const char* data, enum vga_color color);
+# 2 "drivers/terminal.cpp" 2
+# 1 "drivers/utils.hpp" 1
+       
+
+constexpr auto RAND_MAX = 32767;
+
+
+void mem_cpy(char * src, char * dest, int num_of_bytes);
+int strlen(const char * str);
+void base_convert(int num, int base);
+void print_number(int num, int base);
+void print_n(int num);
+void print(char * str);
+void print_c(char ch);
+int rand(void);
+void srand(unsigned int seed);
+void sleep(unsigned int ms);
+void halt(void);
+# 3 "drivers/terminal.cpp" 2
+
+# 1 "/opt/cross/lib/gcc/i686-elf/11.2.0/include/stddef.h" 1 3 4
+# 5 "drivers/terminal.cpp" 2
+
+
+
+static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg)
+{
+ return fg | bg << 4;
+}
+
+static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
+{
+ return (uint16_t) uc | (uint16_t) color << 8;
+}
+
+static constexpr auto VGA_WIDTH = 80;
+static constexpr auto VGA_HEIGHT = 25;
+
+size_t terminal_row;
+size_t terminal_column;
+uint8_t terminal_color = 0;
+uint16_t* terminal_buffer;
+
+void terminal_initialize(void)
+{
+ terminal_row = 0;
+ terminal_column = 0;
+ terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+ terminal_buffer = reinterpret_cast<uint16_t*>(0xB8000);
+ for (auto y = 0; y < VGA_HEIGHT; y++) {
+  for (auto x = 0; x < VGA_WIDTH; x++) {
+   const auto index = y * VGA_WIDTH + x;
+   terminal_buffer[index] = vga_entry(' ', terminal_color);
+  }
+ }
+}
+
+void terminal_setcolor(vga_color text_color, vga_color background_color = vga_color::VGA_COLOR_BLACK)
+{
+ terminal_color = vga_entry_color(text_color, background_color);
+}
+
+void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
+{
+ const auto index = y * VGA_WIDTH + x;
+ terminal_buffer[index] = vga_entry(c, color);
+}
+
+void terminal_putchar(char c)
+{
+ terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+ if (++terminal_column == VGA_WIDTH) {
+  terminal_column = 0;
+  if (++terminal_row == VGA_HEIGHT)
+   terminal_row = 0;
+ }
+}
+
+void terminal_putchar_c(char c, vga_color color)
+{
+ auto backup_color = terminal_color;
+
+ terminal_setcolor(color);
+ terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+ terminal_color = backup_color;
+
+ if (++terminal_column == VGA_WIDTH) {
+  terminal_column = 0;
+  if (++terminal_row == VGA_HEIGHT)
+   terminal_row = 0;
+ }
+}
+
+void terminal_write(const char* data, size_t size)
+{
+
+ for (auto i = 0; i < size; i++)
+ {
+       switch(data[i])
+       {
+           case '\n':
+                terminal_column = 0;
+                terminal_row++;
+    break;
+            default:
+   {
+    if(static_cast<int>(data[i]) >= 32 && static_cast<int>(data[i]) <= 126)
+     terminal_putchar(data[i]);
+    else
+     i++;
+    break;
+   }
+       }
+    }
+}
+
+void terminal_writestring(const char* data)
+{
+ terminal_write(data, strlen(data));
+}
+void terminal_writestring_c(const char* data, vga_color color)
+{
+ auto color_backup = terminal_color;
+ terminal_setcolor(color);
+ terminal_writestring(data);
+ terminal_color = color_backup;
+}
